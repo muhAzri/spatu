@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -31,4 +32,13 @@ String formatCurrency(num number, {String symbol = 'Rp '}) {
     symbol: symbol,
     decimalDigits: 0,
   ).format(number);
+}
+
+void showCustomSnackbar(BuildContext context, String message) {
+  Flushbar(
+    message: message,
+    flushbarPosition: FlushbarPosition.BOTTOM,
+    backgroundColor: redColor,
+    duration: const Duration(seconds: 3),
+  ).show(context);
 }

@@ -47,6 +47,7 @@ class CustomTextFormField extends StatelessWidget {
         prefixUrl,
         width: 24.w,
         height: 24.h,
+        color: grayColor,
       ),
     );
   }
@@ -54,6 +55,7 @@ class CustomTextFormField extends StatelessWidget {
   Widget _buildTextFormField() {
     return Expanded(
       child: TextFormField(
+        controller: controller,
         obscureText: isObsecure,
         style: primaryTextStyle.copyWith(
           fontWeight: medium,
@@ -82,4 +84,3 @@ class CustomTextFormField extends StatelessWidget {
     );
   }
 }
-

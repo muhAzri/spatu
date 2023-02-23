@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "328148440274",
+    "project_id": "spatu-189fe",
+    "storage_bucket": "spatu-189fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328148440274:android:a7613975cb10c4d18fc90b",
+        "android_client_info": {
+          "package_name": "com.muhazri.spatu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328148440274-3bb9dshmu8ocap7md188ba4d7lhmu5ap.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTfpQsO2Sd9J1Kfq94fLv7Ts-N0_qzrx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328148440274-3bb9dshmu8ocap7md188ba4d7lhmu5ap.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "328148440274-nkhiopaq9cmiheh72h5m019glqbv11s0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spatu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

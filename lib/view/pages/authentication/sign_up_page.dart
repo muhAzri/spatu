@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/auth/auth_bloc.dart';
+import 'package:spatu/models/form_model/sign_up_form_model.dart';
+import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
 import 'package:spatu/view/widgets/forms.dart';
 
@@ -13,13 +17,29 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController usernameController =
+      TextEditingController(text: '');
+  final TextEditingController emailController = TextEditingController(text: '');
+  final TextEditingController passwordController =
+      TextEditingController(text: '');
+
   bool isObsecure = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: _buildBody(),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/main', (route) => false);
+          }
+        },
+        builder: (context, state) {
+          return _buildBody();
+        },
+      ),
     );
   }
 
@@ -35,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
           _buildLoginByGoogleButton(),
           _buildLoginSeparator(),
           _buildForms(),
-          _buildLoginButton(),
+          _buildSignUpButton(),
           _buildSignInButton(),
         ],
       ),
@@ -122,18 +142,21 @@ class _SignUpPageState extends State<SignUpPage> {
       margin: EdgeInsets.only(top: 4.h),
       child: Column(
         children: [
-          const CustomTextFormField(
+          CustomTextFormField(
             prefixUrl: 'assets/icons/profile.png',
             hintText: 'Type your username',
+            controller: usernameController,
           ),
-          const CustomTextFormField(
-            prefixUrl: 'assets/icons/call.png',
-            hintText: 'Type your phone number',
+          CustomTextFormField(
+            prefixUrl: 'assets/icons/mail.png',
+            hintText: 'Type your email address',
+            controller: emailController,
           ),
           CustomTextFormField(
             prefixUrl: 'assets/icons/lock.png',
             hintText: 'Type your password',
             isObsecure: isObsecure,
+            controller: passwordController,
             onTap: () {
               setState(
                 () {
@@ -147,17 +170,37 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildSignUpButton() {
     return Container(
       margin: EdgeInsets.only(top: 54.h),
       child: CustomTextButton(
         title: 'Sign Up',
         onTap: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/main', (route) => false);
+          if (validate()) {
+            context.read<AuthBloc>().add(
+                  AuthSignUp(
+                    SignUpFormModel(
+                      username: usernameController.text,
+                      email: emailController.text,
+                      password: passwordController.text,
+                    ),
+                  ),
+                );
+          } else {
+            showCustomSnackbar(context, 'Field tidak boleh kosong');
+          }
         },
       ),
     );
+  }
+
+  bool validate() {
+    if (usernameController.text.isNotEmpty ||
+        emailController.text.isNotEmpty ||
+        passwordController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 
   Widget _buildSignInButton() {

@@ -13,13 +13,13 @@ Spatu is a mobile application built using Flutter, with a primary focus on shoe 
 The UI design in Spatu is based on the Flutter Clean Code principle, making the code more maintainable and easier to read. The slicing process was done with careful attention to detail to ensure that the app's design is consistent and user-friendly.
 
 ## Todo List
-- [x] **Slicing (Completed)**
-- [ ] **Firebase Integration (On Progress)**
-    - [ ] **Authentication (On Progress)**
-    - [ ] **Search Catalog (On Progress)**
-    - [ ] **Cart (On Progress)**
-    - [ ] **Wishlist (On Progress)**
-    - [ ] **Checkout (On Progress)**
+- [x] **Slicing**
+- [ ] **Firebase Integration**
+    - [x] **Authentication**
+    - [ ] **Search Catalog**
+    - [ ] **Cart**
+    - [ ] **Wishlist**
+    - [ ] **Checkout**
 - [ ] **Deploying into Google Play Store**
 
 ## Screenshoots

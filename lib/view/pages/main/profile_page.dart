@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/auth/auth_bloc.dart';
 import 'package:spatu/view/widgets/profile_item.dart';
 
 import '../../../shared/theme.dart';
@@ -9,17 +11,24 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        children: [
-          _buildTitle(),
-          _buildImageProfile(),
-          _buildUserInfo(),
-          _buildDivider(),
-          _buildProfileMenuList(),
-        ],
-      ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthSuccess) {
+          return SafeArea(
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              children: [
+                _buildTitle(),
+                _buildImageProfile(),
+                _buildUserInfo(state: state),
+                _buildDivider(),
+                _buildProfileMenuList(context),
+              ],
+            ),
+          );
+        }
+        return const SizedBox();
+      },
     );
   }
 
@@ -89,13 +98,13 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserInfo() {
+  Widget _buildUserInfo({required AuthSuccess state}) {
     return Container(
       margin: EdgeInsets.only(top: 16.h),
       child: Column(
         children: [
           Text(
-            'Muhammad Azri',
+            state.user.name == null ? state.user.username : state.user.username,
             style: primaryTextStyle.copyWith(
               fontSize: 22.sp,
               fontWeight: medium,
@@ -105,7 +114,7 @@ class ProfilePage extends StatelessWidget {
             height: 6.h,
           ),
           Text(
-            '@maybeazri',
+            '@${state.user.username}',
             style: secondaryTextStyle,
           ),
         ],
@@ -123,37 +132,48 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileMenuList() {
-    return Container(
-      margin: EdgeInsets.only(top: 24.h),
-      child: Column(
-        children: const [
-          ProfileItem(
-            iconUrl: 'assets/icons/profile.png',
-            title: 'Edit Profile',
-          ),
-          ProfileItem(
-            iconUrl: 'assets/icons/pin_point.png',
-            title: 'My Address',
-          ),
-          ProfileItem(
-            iconUrl: 'assets/icons/wallet.png',
-            title: 'Payment Method',
-          ),
-          ProfileItem(
-            iconUrl: 'assets/icons/notification.png',
-            title: 'Notification Settings',
-          ),
-          ProfileItem(
-            iconUrl: 'assets/icons/call.png',
-            title: 'Help Center',
-          ),
-          ProfileItem(
-            iconUrl: 'assets/icons/logout.png',
-            title: 'Log Out',
-            isAlert: true,
-          ),
-        ],
+  Widget _buildProfileMenuList(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthInitial) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/sign-in', (route) => false);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 24.h),
+        child: Column(
+          children: [
+            const ProfileItem(
+              iconUrl: 'assets/icons/profile.png',
+              title: 'Edit Profile',
+            ),
+            const ProfileItem(
+              iconUrl: 'assets/icons/pin_point.png',
+              title: 'My Address',
+            ),
+            const ProfileItem(
+              iconUrl: 'assets/icons/wallet.png',
+              title: 'Payment Method',
+            ),
+            const ProfileItem(
+              iconUrl: 'assets/icons/notification.png',
+              title: 'Notification Settings',
+            ),
+            const ProfileItem(
+              iconUrl: 'assets/icons/call.png',
+              title: 'Help Center',
+            ),
+            ProfileItem(
+              iconUrl: 'assets/icons/logout.png',
+              title: 'Log Out',
+              isAlert: true,
+              onTap: () {
+                context.read<AuthBloc>().add(AuthSignOut());
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

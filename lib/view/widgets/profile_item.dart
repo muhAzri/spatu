@@ -18,15 +18,18 @@ class ProfileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40.h,
-      margin: EdgeInsets.only(bottom: 16.h),
-      child: Row(
-        children: [
-          _buildIcon(),
-          _buildTitle(),
-          _buildChervoletIcon(),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 40.h,
+        margin: EdgeInsets.only(bottom: 16.h),
+        child: Row(
+          children: [
+            _buildIcon(),
+            _buildTitle(),
+            _buildChervoletIcon(),
+          ],
+        ),
       ),
     );
   }

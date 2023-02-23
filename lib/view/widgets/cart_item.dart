@@ -58,7 +58,9 @@ class _CartItemState extends State<CartItem> {
         right: 12.w,
       ),
       decoration: BoxDecoration(
-          color: backgroundColor4, borderRadius: BorderRadius.circular(6.5.r)),
+        color: backgroundColor4,
+        borderRadius: BorderRadius.circular(6.5.r),
+      ),
       child: Image.asset(
         'assets/images/dummy_shoes.png',
         width: 71.4.w,

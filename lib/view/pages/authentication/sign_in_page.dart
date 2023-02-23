@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/models/form_model/sign_in_form_model.dart';
+import 'package:spatu/shared/method.dart';
 
+import '../../../bloc/auth/auth_bloc.dart';
 import '../../../shared/theme.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/forms.dart';
@@ -14,6 +18,10 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  final TextEditingController emailController = TextEditingController(text: '');
+  final TextEditingController passwordController =
+      TextEditingController(text: '');
+
   bool isObsecure = true;
 
   @override
@@ -37,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
           _buildLoginSeparator(),
           _buildForms(),
           _buildLoginButton(),
-          _buildSignInButton(),
+          _buildSignUpButton(),
         ],
       ),
     );
@@ -123,14 +131,16 @@ class _SignInPageState extends State<SignInPage> {
       margin: EdgeInsets.only(top: 4.h),
       child: Column(
         children: [
-          const CustomTextFormField(
-            prefixUrl: 'assets/icons/profile.png',
-            hintText: 'Type your username',
+          CustomTextFormField(
+            prefixUrl: 'assets/icons/mail.png',
+            hintText: 'Type your email',
+            controller: emailController,
           ),
           CustomTextFormField(
             prefixUrl: 'assets/icons/lock.png',
             hintText: 'Type your password',
             isObsecure: isObsecure,
+            controller: passwordController,
             onTap: () {
               setState(
                 () {
@@ -145,19 +155,43 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildLoginButton() {
-    return Container(
-      margin: EdgeInsets.only(top: 87.h),
-      child: CustomTextButton(
-        title: 'Sign In',
-        onTap: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/main', (route) => false);
-        },
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 87.h),
+        child: CustomTextButton(
+          title: 'Sign In',
+          onTap: () {
+            if (validate()) {
+              context.read<AuthBloc>().add(
+                    AuthSignIn(
+                      SignInFormModel(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      ),
+                    ),
+                  );
+            } else {
+              showCustomSnackbar(context, "Field tidak boleh Kosong");
+            }
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildSignInButton() {
+  bool validate() {
+    if (emailController.text.isNotEmpty || passwordController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  Widget _buildSignUpButton() {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, '/sign-up');
