@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spatu/shared/theme.dart';
 import 'package:spatu/view/widgets/buttons.dart';
 import 'package:spatu/view/widgets/product_card.dart';
 
+import '../../../bloc/brand/brand_bloc.dart';
+import '../../../bloc/product/product_bloc.dart';
 import '../../widgets/brand_item.dart';
 import '../../widgets/search_appbar.dart';
 
@@ -98,27 +101,24 @@ class HomePage extends StatelessWidget {
         left: 16.w,
         right: 16.w,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          BrandItem(
-            name: 'Adidas',
-            imageUrl: 'assets/images/company_logo.png',
-          ),
-          BrandItem(
-            name: 'Puma',
-            imageUrl: 'assets/images/company_logo.png',
-          ),
-          BrandItem(
-            name: 'Nike',
-            imageUrl: 'assets/images/company_logo.png',
-          ),
-          BrandItem(
-            name: 'Reebok',
-            imageUrl: 'assets/images/company_logo.png',
-          ),
-        ],
+      child: BlocProvider(
+        create: (context) => BrandBloc()..add(GetBrandEvent()),
+        child: BlocBuilder<BrandBloc, BrandState>(
+          builder: (context, state) {
+            if (state is BrandSuccess) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: state.brands
+                    .map(
+                      (brand) => BrandItem(brand: brand),
+                    )
+                    .toList(),
+              );
+            }
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
@@ -152,17 +152,26 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildMostPopularContent() {
-    return Container(
-      margin: EdgeInsets.only(top: 16.h),
-      child: Wrap(
-        runSpacing: 20.h,
-        spacing: 16.w,
-        children: const [
-          ProductCard(),
-          ProductCard(),
-          ProductCard(),
-          ProductCard(),
-        ],
+    return BlocProvider(
+      create: (context) => ProductBloc()..add(FetchProductEvent()),
+      child: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductSuccess) {
+            return Container(
+              margin: EdgeInsets.only(top: 16.h),
+              child: Wrap(
+                  runSpacing: 20.h,
+                  spacing: 16.w,
+                  children: state.products
+                      .map(
+                        (product) => ProductCard(product: product),
+                      )
+                      .toList()),
+            );
+          }
+
+          return const SizedBox();
+        },
       ),
     );
   }

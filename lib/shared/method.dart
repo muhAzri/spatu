@@ -26,7 +26,8 @@ showMyDialog(BuildContext context) {
   );
 }
 
-String formatCurrency(num number, {String symbol = 'Rp '}) {
+String formatCurrency({required num number, String? symbol}) {
+  symbol ??= 'Rp ';
   return NumberFormat.currency(
     locale: 'id',
     symbol: symbol,
@@ -39,6 +40,22 @@ void showCustomSnackbar(BuildContext context, String message) {
     message: message,
     flushbarPosition: FlushbarPosition.BOTTOM,
     backgroundColor: redColor,
-    duration: const Duration(seconds: 3),
+    duration: const Duration(seconds: 2),
   ).show(context);
 }
+
+Map<String, dynamic> images = {
+  'black': [
+    'imageUrl',
+    'imageUrl',
+    'imageUrl',
+    'imageUrl',
+  ],
+  'blue': [
+    'imageUrl',
+    'imageUrl',
+    'imageUrl',
+    'imageUrl',
+    'imageUrl',
+  ]
+};

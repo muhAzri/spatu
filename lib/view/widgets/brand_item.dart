@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/models/brand.dart';
 import 'package:spatu/shared/theme.dart';
 
 class BrandItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-
-  const BrandItem({super.key, required this.imageUrl, required this.name});
+  final BrandModel brand;
+  const BrandItem({
+    super.key,
+    required this.brand,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +35,8 @@ class BrandItem extends StatelessWidget {
         color: backgroundColor4,
         borderRadius: BorderRadius.circular(6.r),
       ),
-      child: Image.asset(
-        imageUrl,
+      child: CachedNetworkImage(
+        imageUrl: brand.logoUrl,
         width: 24.w,
         height: 24.h,
       ),
@@ -44,7 +47,7 @@ class BrandItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 12.h),
       child: Text(
-        name,
+        brand.name,
         style: primaryTextStyle,
         textAlign: TextAlign.center,
       ),

@@ -1,48 +1,43 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/models/product.dart';
 import 'package:spatu/shared/theme.dart';
 
 import '../../shared/method.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+  final ProductModel product;
+
+  const DetailPage({super.key, required this.product});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
+  bool extended = false;
+
   int currentIndex = 0;
-  int colorIndex = 0;
   int sizeIndex = 0;
 
+  String? selectedColorKey;
+  var color;
+
+  @override
+  void initState() {
+    color = widget.product.colors.first.toString().toLowerCase();
+    selectedColorKey = widget.product.images.keys.toList().first;
+    super.initState();
+  }
+
   CarouselController carouselController = CarouselController();
-
-  List<String> images = [
-    'assets/images/detail_image1.png',
-    'assets/images/detail_image2.png',
-    'assets/images/detail_image3.png',
-    'assets/images/detail_image4.png',
-    'assets/images/detail_image5.png',
-  ];
-
-  List<String> colorImages = [
-    'assets/images/detail_image1.png',
-    'assets/images/detail_image_color.png'
-  ];
-
-  List<String> sizeShoes = [
-    '40',
-    '41',
-    '42',
-    '43',
-    '44',
-    '45',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +111,10 @@ class _DetailPageState extends State<DetailPage> {
     return Center(
       child: CarouselSlider(
         carouselController: carouselController,
-        items: images
+        items: (widget.product.images[selectedColorKey] as List<dynamic>)
             .map(
-              (image) => Image.asset(
-                image,
+              (image) => CachedNetworkImage(
+                imageUrl: image,
                 width: 254.w,
                 fit: BoxFit.cover,
               ),
@@ -144,7 +139,7 @@ class _DetailPageState extends State<DetailPage> {
       margin: EdgeInsets.only(top: 24.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: images
+        children: (widget.product.images[selectedColorKey] as List<dynamic>)
             .asMap()
             .map(
               (index, image) => MapEntry(
@@ -192,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
 
   Widget _buildProductName() {
     return Text(
-      'Metcon 8 Superblack',
+      widget.product.name,
       style: primaryTextStyle.copyWith(
         fontSize: 22.sp,
         fontWeight: medium,
@@ -216,7 +211,7 @@ class _DetailPageState extends State<DetailPage> {
 
   Widget _buildBrandName() {
     return Text(
-      'Nike ·',
+      '${widget.product.brand} ·',
       style: secondaryTextStyle.copyWith(
         fontWeight: medium,
       ),
@@ -235,7 +230,7 @@ class _DetailPageState extends State<DetailPage> {
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
-        '12.512 Sold',
+        '${formatCurrency(number: widget.product.soldCount, symbol: '')} Sold',
         style: yellowTextStyle.copyWith(
           fontSize: 12.sp,
           fontWeight: medium,
@@ -258,15 +253,8 @@ class _DetailPageState extends State<DetailPage> {
             width: 2.w,
           ),
           Text(
-            '5.0',
+            widget.product.rating.toString(),
             style: orangeTextStyle,
-          ),
-          SizedBox(
-            width: 2.w,
-          ),
-          Text(
-            '(6.828)',
-            style: primaryTextStyle,
           ),
         ],
       ),
@@ -323,15 +311,22 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildDescContent() {
-    return Container(
-      margin: EdgeInsets.only(top: 12.h),
-      child: Text(
-        'You chase the clock, challenging and encouraging each other all in the name of achieving goals and making gains. Our go-to model for training relies on a lighter, more breathable upper than our previous edition to complement our standards of durability and comfort, so that you can float through your cardio, power through your lifts and dominate your workouts. This version has a collapsible heel that lets you step in without using your hands; then it snaps back up to secure your foot.',
-        style: primaryTextStyle.copyWith(
-          fontWeight: light,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          extended = !extended;
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 12.h),
+        child: Text(
+          '${widget.product.description} See More',
+          style: primaryTextStyle.copyWith(
+            fontWeight: light,
+          ),
+          textAlign: TextAlign.left,
+          maxLines: extended ? null : 3,
         ),
-        textAlign: TextAlign.left,
-        maxLines: 3,
       ),
     );
   }
@@ -364,26 +359,19 @@ class _DetailPageState extends State<DetailPage> {
       margin: EdgeInsets.only(top: 12.h),
       child: Wrap(
         spacing: 12.w,
-        children: colorImages
-            .asMap()
-            .map(
-              (index, color) => MapEntry(
-                index,
-                GestureDetector(
+        children: widget.product.images.entries
+            .map((entry) => GestureDetector(
                   onTap: () {
                     setState(() {
-                      colorIndex = index;
+                      selectedColorKey = entry.key;
                     });
                   },
                   child: ImageRowItem(
-                    imageUrl: color,
-                    isSelected: colorIndex == index,
+                    imageUrl: entry.value[0],
+                    isSelected: entry.key == selectedColorKey,
                     bgColor: backgroundColor4,
                   ),
-                ),
-              ),
-            )
-            .values
+                ))
             .toList(),
       ),
     );
@@ -418,7 +406,7 @@ class _DetailPageState extends State<DetailPage> {
       child: Wrap(
         spacing: 12.w,
         runSpacing: 6.h,
-        children: sizeShoes
+        children: widget.product.size
             .asMap()
             .map(
               (index, size) => MapEntry(
@@ -430,7 +418,7 @@ class _DetailPageState extends State<DetailPage> {
                     });
                   },
                   child: SizeItem(
-                    size: size,
+                    size: size.toString(),
                     isSelected: sizeIndex == index,
                   ),
                 ),
@@ -486,7 +474,7 @@ class _DetailPageState extends State<DetailPage> {
           height: 4.h,
         ),
         Text(
-          'IDR ${formatCurrency(3195953)}',
+          formatCurrency(number: widget.product.price),
           style: primaryTextStyle.copyWith(
             fontSize: 18.sp,
             fontWeight: medium,
@@ -558,7 +546,7 @@ class ImageRowItem extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: Image.asset(imageUrl),
+          child: Image.network(imageUrl),
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(6.r),
@@ -579,7 +567,7 @@ class ImageRowItem extends StatelessWidget {
   }
 
   Widget _buildUnselectedImageWidget() {
-    return Image.asset(
+    return Image.network(
       imageUrl,
     );
   }

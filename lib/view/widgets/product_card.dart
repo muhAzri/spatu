@@ -1,11 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/models/product.dart';
+import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
 
 import '../pages/detail_page.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  final ProductModel product;
+
+  const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +19,19 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  const DetailPage(),
+            builder: (context) =>  DetailPage(product: product,),
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildProductImage(),
-          _buildProductInfo(),
-        ],
+      child: SizedBox(
+        width: 155.w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildProductImage(),
+            _buildProductInfo(),
+          ],
+        ),
       ),
     );
   }
@@ -40,10 +48,11 @@ class ProductCard extends StatelessWidget {
         color: backgroundColor4,
         borderRadius: BorderRadius.circular(6.r),
       ),
-      child: Image.asset(
-        'assets/images/dummy_shoes.png',
+      child: CachedNetworkImage(
+        imageUrl: product.images[product.colors[0].toLowerCase()][0],
         width: 110.88.w,
         height: 105.h,
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -64,7 +73,7 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildProductName() {
     return Text(
-      'Air Zoom SuperRep',
+      product.name,
       style: primaryTextStyle.copyWith(
         fontSize: 16.sp,
         fontWeight: medium,
@@ -89,7 +98,7 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildBrandName() {
     return Text(
-      'Nike ·',
+      '${product.brand} ·',
       style: secondaryTextStyle.copyWith(
         fontWeight: medium,
       ),
@@ -108,7 +117,7 @@ class ProductCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
-        '52.214 Sold',
+        '${formatCurrency(number: product.soldCount, symbol: '')} Sold',
         style: yellowTextStyle.copyWith(
           fontSize: 12.sp,
           fontWeight: medium,
@@ -121,7 +130,7 @@ class ProductCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 4.h),
       child: Text(
-        'IDR 1.799.000',
+        formatCurrency(number: product.price),
         style: primaryTextStyle.copyWith(
           fontSize: 16.sp,
           fontWeight: medium,

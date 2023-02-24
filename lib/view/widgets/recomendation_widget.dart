@@ -13,7 +13,7 @@ class RecomendationWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildRecomendationTitle(),
-        _buildRecomendationContent(),
+        // _buildRecomendationContent(),
       ],
     );
   }
@@ -33,19 +33,19 @@ class RecomendationWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRecomendationContent() {
-    return Container(
-      margin: EdgeInsets.only(top: 16.h),
-      child: Wrap(
-        runSpacing: 20.h,
-        spacing: 16.w,
-        children: const [
-          ProductCard(),
-          ProductCard(),
-          ProductCard(),
-          ProductCard(),
-        ],
-      ),
-    );
-  }
+  // Widget _buildRecomendationContent() {
+  //   return Container(
+  //     margin: EdgeInsets.only(top: 16.h),
+  //     child: Wrap(
+  //       runSpacing: 20.h,
+  //       spacing: 16.w,
+  //       children: const [
+  //         ProductCard(),
+  //         ProductCard(),
+  //         ProductCard(),
+  //         ProductCard(),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
