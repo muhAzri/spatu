@@ -27,20 +27,26 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  void _changeToExplorationPage() {
+    setState(() {
+      currentIndex = 1;
+    });
+  }
+
   Widget _buildBody() {
     switch (currentIndex) {
       case 0:
-        return const HomePage();
+        return HomePage(onSearchTapped: _changeToExplorationPage);
       case 1:
         return const ExplorationPage();
       case 2:
-        return const WishlistPage();
+        return WishlistPage(onSearchTapped: _changeToExplorationPage);
       case 3:
         return const NotificationPage();
       case 4:
         return const ProfilePage();
       default:
-        return const HomePage();
+        return HomePage(onSearchTapped: _changeToExplorationPage);
     }
   }
 

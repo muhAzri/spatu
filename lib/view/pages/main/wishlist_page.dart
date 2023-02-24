@@ -7,14 +7,18 @@ import '../../widgets/search_appbar.dart';
 import '../../widgets/wishlist_item.dart';
 
 class WishlistPage extends StatelessWidget {
-  const WishlistPage({super.key});
+  final VoidCallback onSearchTapped;
+  const WishlistPage({super.key, required this.onSearchTapped});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       children: [
-        const SearchAppBar(),
+        GestureDetector(
+          onTap: onSearchTapped,
+          child: const SearchAppBar(),
+        ),
         _buildWishlistTitle(),
         // _buildWishlistEmpty(),
         _buildWishlistList(),

@@ -11,14 +11,18 @@ import '../../widgets/brand_item.dart';
 import '../../widgets/search_appbar.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback onSearchTapped;
+  const HomePage({super.key, required this.onSearchTapped});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       children: [
-        const SearchAppBar(),
+        GestureDetector(
+          onTap: onSearchTapped,
+          child: const SearchAppBar(),
+        ),
         _buildSpecialOfferSection(),
         _buildBrandCategoriesSection(),
         _buildBrandCategoriesList(),
@@ -81,11 +85,8 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Brand Categories',
+            'Top Brands',
             style: primaryTextStyle.copyWith(fontSize: 16.sp),
-          ),
-          SeeAllButton(
-            onTap: () {},
           ),
         ],
       ),
@@ -143,9 +144,6 @@ class HomePage extends StatelessWidget {
             'Most Populars',
             style: primaryTextStyle.copyWith(fontSize: 16.sp),
           ),
-          SeeAllButton(
-            onTap: () {},
-          ),
         ],
       ),
     );
@@ -163,6 +161,7 @@ class HomePage extends StatelessWidget {
                   runSpacing: 20.h,
                   spacing: 16.w,
                   children: state.products
+                      .take(4)
                       .map(
                         (product) => ProductCard(product: product),
                       )
