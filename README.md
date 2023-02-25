@@ -18,7 +18,7 @@ The UI design in Spatu is based on the Flutter Clean Code principle, making the 
     - [x] **Authentication**
     - [x] **Product Catalog**
     - [x] **Product Details**
-    - [ ] **Search Catalog**
+    - [x] **Search Catalog**
     - [ ] **Cart**
     - [ ] **Wishlist**
     - [ ] **Checkout**
