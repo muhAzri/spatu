@@ -17,7 +17,7 @@ class WishlistPage extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onSearchTapped,
-          child: const SearchAppBar(),
+          child:  const SearchAppBar(),
         ),
         _buildWishlistTitle(),
         // _buildWishlistEmpty(),

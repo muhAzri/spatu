@@ -39,33 +39,40 @@ class _DetailPageState extends State<DetailPage> {
 
   CarouselController carouselController = CarouselController();
 
+  Future<void> refreshMethod() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: _buildBottomBar(),
         backgroundColor: backgroundColor1,
         appBar: _buildAppBar(),
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container(
-                height: 160.h,
-                color: backgroundColor3,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildProductCard(),
-                    _buildProductInformation(),
-                    _buildDescription(),
-                    _buildColorSelection(),
-                    _buildSizeSelection(),
-                  ],
+        body: RefreshIndicator(
+          onRefresh: refreshMethod,
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Container(
+                  height: 160.h,
+                  color: backgroundColor3,
                 ),
-              )
-            ],
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildProductCard(),
+                      _buildProductInformation(),
+                      _buildDescription(),
+                      _buildColorSelection(),
+                      _buildSizeSelection(),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

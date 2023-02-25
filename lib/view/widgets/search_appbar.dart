@@ -4,7 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../shared/theme.dart';
 
 class SearchAppBar extends StatelessWidget {
-  const SearchAppBar({super.key});
+  final TextEditingController? searchController;
+  final Function(String value)? onFieldSubmited;
+
+  const SearchAppBar({super.key, this.searchController, this.onFieldSubmited});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,8 @@ class SearchAppBar extends StatelessWidget {
   Widget _buildTextFormField() {
     return Expanded(
       child: TextFormField(
+        onFieldSubmitted: onFieldSubmited,
+        controller: searchController,
         style: primaryTextStyle.copyWith(
           fontWeight: medium,
         ),

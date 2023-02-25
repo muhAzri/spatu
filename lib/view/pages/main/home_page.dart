@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:spatu/shared/theme.dart';
 import 'package:spatu/view/widgets/buttons.dart';
 import 'package:spatu/view/widgets/product_card.dart';
@@ -10,24 +11,36 @@ import '../../../bloc/product/product_bloc.dart';
 import '../../widgets/brand_item.dart';
 import '../../widgets/search_appbar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final VoidCallback onSearchTapped;
   const HomePage({super.key, required this.onSearchTapped});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Future<void> _refresh() async {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      children: [
-        GestureDetector(
-          onTap: onSearchTapped,
-          child: const SearchAppBar(),
-        ),
-        _buildSpecialOfferSection(),
-        _buildBrandCategoriesSection(),
-        _buildBrandCategoriesList(),
-        _buildMostPopularSection()
-      ],
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        children: [
+          GestureDetector(
+            onTap: widget.onSearchTapped,
+            child: const SearchAppBar(),
+          ),
+          _buildSpecialOfferSection(),
+          _buildBrandCategoriesSection(),
+          _buildBrandCategoriesList(),
+          _buildMostPopularSection()
+        ],
+      ),
     );
   }
 

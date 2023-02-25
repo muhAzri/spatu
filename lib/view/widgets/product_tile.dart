@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/models/product.dart';
+import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
 
 import '../pages/detail_page.dart';
 
 class ProductTile extends StatelessWidget {
-  const ProductTile({super.key});
+  final ProductModel product;
+
+  const ProductTile({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) =>   DetailPage(),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(
+              product: product,
+            ),
+          ),
+        );
       },
       child: Container(
         height: 117.h,
@@ -34,7 +40,7 @@ class ProductTile extends StatelessWidget {
         child: Row(
           children: [
             _buildProductPicture(),
-            _buildProductInfo(),
+            Expanded(child: _buildProductInfo()),
           ],
         ),
       ),
@@ -54,10 +60,13 @@ class ProductTile extends StatelessWidget {
       ),
       decoration: BoxDecoration(
           color: backgroundColor4, borderRadius: BorderRadius.circular(6.5.r)),
-      child: Image.asset(
-        'assets/images/dummy_shoes.png',
-        width: 71.4.w,
-        height: 71.4.h,
+      // child: Image.asset(
+      //   'assets/images/dummy_shoes.png',
+      //   width: 71.4.w,
+      //   height: 71.4.h,
+      // ),
+      child: Image.network(
+        product.images[product.colors[0].toLowerCase()][0],
       ),
     );
   }
@@ -74,13 +83,16 @@ class ProductTile extends StatelessWidget {
   }
 
   Widget _buildProductName() {
-    return Text(
-      'Metcon 7',
-      style: primaryTextStyle.copyWith(
-        fontSize: 16.sp,
-        fontWeight: medium,
+    return SizedBox(
+      width: 327.w,
+      child: Text(
+        product.name,
+        style: primaryTextStyle.copyWith(
+          fontSize: 16.sp,
+          fontWeight: medium,
+        ),
+        overflow: TextOverflow.ellipsis,
       ),
-      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -100,7 +112,7 @@ class ProductTile extends StatelessWidget {
 
   Widget _buildBrandName() {
     return Text(
-      'Nike ·',
+      '${product.brand} ·',
       style: secondaryTextStyle.copyWith(
         fontWeight: medium,
       ),
@@ -119,7 +131,7 @@ class ProductTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
-        '52.214 Sold',
+        '${product.soldCount} Sold',
         style: yellowTextStyle.copyWith(
           fontSize: 12.sp,
           fontWeight: medium,
@@ -132,7 +144,7 @@ class ProductTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 4.h),
       child: Text(
-        'IDR 1.799.000',
+        formatCurrency(number: product.price),
         style: primaryTextStyle.copyWith(
           fontSize: 16.sp,
           fontWeight: medium,

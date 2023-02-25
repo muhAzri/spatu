@@ -1,34 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/product/product_bloc.dart';
 import 'package:spatu/view/widgets/product_tile.dart';
 import 'package:spatu/view/widgets/recomendation_widget.dart';
 
 import '../../../shared/theme.dart';
 import '../../widgets/search_appbar.dart';
 
-class ExplorationPage extends StatelessWidget {
+class ExplorationPage extends StatefulWidget {
   const ExplorationPage({super.key});
+
+  @override
+  State<ExplorationPage> createState() => _ExplorationPageState();
+}
+
+class _ExplorationPageState extends State<ExplorationPage> {
+  final TextEditingController searchController =
+      TextEditingController(text: '');
+
+  late ProductBloc prodBloc;
+
+  @override
+  void initState() {
+    prodBloc = context.read<ProductBloc>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       children: [
-        const SearchAppBar(),
-        _buildSearchResult(),
-        const RecomendationWidget(),
+        SearchAppBar(
+          searchController: searchController,
+          onFieldSubmited: (value) {
+            if (value.isNotEmpty) {
+              prodBloc.add(SearchProductEvent(value));
+            }
+            setState(() {});
+          },
+        ),
+        searchController.text.isEmpty
+            ? const RecomendationWidget()
+            : _buildSearchResult(),
       ],
     );
   }
 
   Widget _buildSearchResult() {
-    return Column(
-      children: [
-        _buildSearchResultTitle(),
-        _buildSearchResultList(),
-        // _buildSearchNotFound(),
-      ],
+    Widget foundOrNot(
+        {required bool condition, required ProductSearchSuccess state}) {
+      if (condition) {
+        return _buildSearchNotFound();
+      }
+
+      return _buildSearchResultList(state: state);
+    }
+
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductSearchSuccess) {
+          return Column(
+            children: [
+              _buildSearchResultTitle(),
+              foundOrNot(
+                condition: state.products.isEmpty,
+                state: state,
+              ),
+            ],
+          );
+        }
+
+        return const SizedBox();
+      },
     );
   }
 
@@ -81,14 +127,13 @@ class ExplorationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchResultList() {
+  Widget _buildSearchResultList({required ProductSearchSuccess state}) {
     return Container(
       margin: EdgeInsets.only(top: 24.h),
       child: Column(
-        children: const [
-          ProductTile(),
-          ProductTile(),
-        ],
+        children: state.products
+            .map((product) => ProductTile(product: product))
+            .toList(),
       ),
     );
   }

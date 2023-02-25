@@ -10,3 +10,4 @@ abstract class BrandEvent extends Equatable {
 class GetBrandEvent extends BrandEvent{
   
 }
+

@@ -28,3 +28,12 @@ class ProductSuccess extends ProductState {
   @override
   List<Object> get props => [products];
 }
+
+class ProductSearchSuccess extends ProductState {
+  final List<ProductModel> products;
+
+  const ProductSearchSuccess(this.products);
+
+  @override
+  List<Object> get props => [products];
+}

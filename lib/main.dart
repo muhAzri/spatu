@@ -10,6 +10,7 @@ import 'package:spatu/view/pages/main/main_page.dart';
 import 'package:spatu/view/pages/splash_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/product/product_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -27,8 +28,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(),
+        ),
+        BlocProvider<ProductBloc>(
+          create: (context) => ProductBloc(),
         ),
       ],
       child: ScreenUtilInit(
