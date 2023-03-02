@@ -7,10 +7,12 @@ import 'package:spatu/view/pages/authentication/sign_in_page.dart';
 import 'package:spatu/view/pages/authentication/sign_up_page.dart';
 import 'package:spatu/view/pages/cart_page.dart';
 import 'package:spatu/view/pages/main/main_page.dart';
+import 'package:spatu/view/pages/profile/edit_profile_page.dart';
 import 'package:spatu/view/pages/splash_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/product/product_bloc.dart';
+import 'bloc/user/user_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -34,6 +36,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<ProductBloc>(
           create: (context) => ProductBloc(),
         ),
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(),
+        )
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -46,6 +51,7 @@ class MainApp extends StatelessWidget {
               '/sign-in': (context) => const SignInPage(),
               '/main': (context) => const MainPage(),
               '/cart': (context) => const CartPage(),
+              '/edit-profile': (context) => const EditProfilePage(),
             },
             theme: ThemeData(
               scaffoldBackgroundColor: backgroundColor1,

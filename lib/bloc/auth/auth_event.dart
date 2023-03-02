@@ -28,11 +28,4 @@ class AuthSignIn extends AuthEvent {
 
 class AuthSignOut extends AuthEvent {}
 
-class GetCurrentUser extends AuthEvent {
-  final String id;
 
-  const GetCurrentUser(this.id);
-
-  @override
-  List<Object> get props => [id];
-}

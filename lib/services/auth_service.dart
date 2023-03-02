@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spatu/models/form_model/sign_in_form_model.dart';
 import 'package:spatu/models/form_model/sign_up_form_model.dart';
+import 'package:spatu/services/user_service.dart';
 
 import '../models/user.dart';
 
@@ -49,28 +50,14 @@ class AuthService {
   Future<UserModel> signIn({required SignInFormModel model}) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: model.email, password: model.password);
+        email: model.email,
+        password: model.password,
+      );
 
       UserModel user =
-          await AuthService().getUserById(userCredential.user!.uid);
+          await UserService().getUserById(userCredential.user!.uid);
 
       return user;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<UserModel> getUserById(String id) async {
-    try {
-      DocumentSnapshot snapshot = await _userRefference.doc(id).get();
-
-      return UserModel(
-        id: id,
-        username: snapshot['username'],
-        email: snapshot['email'],
-        name: snapshot['name'],
-        imageUrl: snapshot['image_url'],
-      );
     } catch (e) {
       rethrow;
     }

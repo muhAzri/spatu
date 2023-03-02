@@ -59,15 +59,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
 
-    on<GetCurrentUser>(
-      (event, emit) async {
-        try {
-          UserModel user = await AuthService().getUserById(event.id);
-          emit(AuthSuccess(user));
-        } catch (e) {
-          emit(AuthFailed(e.toString()));
-        }
-      },
-    );
+ 
   }
 }

@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:spatu/shared/theme.dart';
 
@@ -44,18 +45,10 @@ void showCustomSnackbar(BuildContext context, String message) {
   ).show(context);
 }
 
-Map<String, dynamic> images = {
-  'black': [
-    'imageUrl',
-    'imageUrl',
-    'imageUrl',
-    'imageUrl',
-  ],
-  'blue': [
-    'imageUrl',
-    'imageUrl',
-    'imageUrl',
-    'imageUrl',
-    'imageUrl',
-  ]
-};
+Future<XFile?> selectImage() async {
+  XFile? selectedImage = await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+  );
+
+  return selectedImage;
+}

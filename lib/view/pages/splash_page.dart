@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spatu/bloc/auth/auth_bloc.dart';
+import 'package:spatu/bloc/user/user_bloc.dart';
 import 'package:spatu/shared/theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
             (route) => false,
           );
         } else {
-          context.read<AuthBloc>().add(GetCurrentUser(user.uid));
+          context.read<UserBloc>().add(GetCurrentUser(user.uid));
           Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
         }
       },

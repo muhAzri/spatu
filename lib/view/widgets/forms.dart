@@ -84,3 +84,77 @@ class CustomTextFormField extends StatelessWidget {
     );
   }
 }
+
+class EditProfileFormField extends StatelessWidget {
+  final String title;
+  final String hintText;
+  final TextEditingController? controller;
+
+  const EditProfileFormField({
+    super.key,
+    required this.title,
+    required this.hintText,
+    this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 8.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitle(),
+          _buildContainer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 12.h,
+        bottom: 12.h,
+      ),
+      child: Text(
+        title,
+        style: primaryTextStyle.copyWith(
+          fontWeight: semiBold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContainer() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
+      decoration: BoxDecoration(
+        color: backgroundColor4,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Row(
+        children: [
+          _buildTextFormField(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextFormField() {
+    return Expanded(
+      child: TextFormField(
+        controller: controller,
+        style: primaryTextStyle.copyWith(
+          fontWeight: medium,
+        ),
+        decoration: InputDecoration.collapsed(
+          hintText: hintText,
+          hintStyle: secondaryTextStyle.copyWith(
+            fontWeight: light,
+          ),
+        ),
+      ),
+    );
+  }
+}
