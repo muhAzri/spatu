@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +7,7 @@ import 'package:spatu/models/form_model/sign_in_form_model.dart';
 import 'package:spatu/shared/method.dart';
 
 import '../../../bloc/auth/auth_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../shared/theme.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/forms.dart';
@@ -158,7 +160,14 @@ class _SignInPageState extends State<SignInPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
+          User? user = FirebaseAuth.instance.currentUser;
+
+          context.read<UserBloc>().add(GetCurrentUser(user!.uid));
           Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
+        }
+
+        if (state is AuthFailed) {
+          showCustomSnackbar(context, state.e);
         }
       },
       child: Container(
