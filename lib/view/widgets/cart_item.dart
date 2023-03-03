@@ -1,17 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/cart/cart_cubit.dart';
+import 'package:spatu/models/cart.dart';
+import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
 
 class CartItem extends StatefulWidget {
-  const CartItem({super.key});
+  final CartModel cart;
+
+  const CartItem({super.key, required this.cart});
 
   @override
   State<CartItem> createState() => _CartItemState();
 }
 
 class _CartItemState extends State<CartItem> {
-  int quantity = 1;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,8 +66,9 @@ class _CartItemState extends State<CartItem> {
         color: backgroundColor4,
         borderRadius: BorderRadius.circular(6.5.r),
       ),
-      child: Image.asset(
-        'assets/images/dummy_shoes.png',
+      child: CachedNetworkImage(
+        imageUrl: widget.cart.product
+            .images[widget.cart.product.colors[0].toLowerCase()][0],
         width: 71.4.w,
         height: 71.4.h,
       ),
@@ -81,13 +87,16 @@ class _CartItemState extends State<CartItem> {
   }
 
   Widget _buildProductName() {
-    return Text(
-      'Metcon 7',
-      style: primaryTextStyle.copyWith(
-        fontSize: 16.sp,
-        fontWeight: medium,
+    return SizedBox(
+      width: 196.w,
+      child: Text(
+        widget.cart.product.name,
+        style: primaryTextStyle.copyWith(
+          fontSize: 16.sp,
+          fontWeight: medium,
+        ),
+        overflow: TextOverflow.ellipsis,
       ),
-      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -107,7 +116,7 @@ class _CartItemState extends State<CartItem> {
 
   Widget _buildBrandName() {
     return Text(
-      'Nike ·',
+      '${widget.cart.product.brand} ·',
       style: secondaryTextStyle.copyWith(
         fontWeight: medium,
       ),
@@ -126,7 +135,7 @@ class _CartItemState extends State<CartItem> {
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
-        '52.214 Sold',
+        '${widget.cart.product.soldCount} Sold',
         style: yellowTextStyle.copyWith(
           fontSize: 12.sp,
           fontWeight: medium,
@@ -139,7 +148,7 @@ class _CartItemState extends State<CartItem> {
     return Container(
       margin: EdgeInsets.only(top: 4.h),
       child: Text(
-        'IDR 1.799.000',
+        formatCurrency(number: widget.cart.product.price),
         style: primaryTextStyle.copyWith(
           fontSize: 16.sp,
           fontWeight: medium,
@@ -185,13 +194,18 @@ class _CartItemState extends State<CartItem> {
   }
 
   Widget _buildDeleteButton() {
-    return Container(
-      margin: EdgeInsets.only(left: 2.w),
-      child: Center(
-        child: Image.asset(
-          'assets/icons/remove.png',
-          width: 24.w,
-          height: 24.h,
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<CartCubit>(context).removeCart(widget.cart.id);
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 2.w),
+        child: Center(
+          child: Image.asset(
+            'assets/icons/remove.png',
+            width: 24.w,
+            height: 24.h,
+          ),
         ),
       ),
     );
@@ -222,20 +236,7 @@ class _CartItemState extends State<CartItem> {
   Widget _buildMinusButton() {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          if (quantity != 1) {
-            quantity--;
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              duration: Duration(milliseconds: 2000),
-              content: Center(
-                child: Text(
-                  'Tolong Gunakan Tombol Delete Cart',
-                ),
-              ),
-            ));
-          }
-        });
+        BlocProvider.of<CartCubit>(context).reduceQuantity(widget.cart.id);
       },
       child: Icon(
         Icons.remove,
@@ -250,7 +251,7 @@ class _CartItemState extends State<CartItem> {
       height: 18.h,
       child: Center(
         child: Text(
-          '$quantity',
+          '${widget.cart.quantity}',
           style: primaryTextStyle.copyWith(
             fontWeight: semiBold,
           ),
@@ -262,9 +263,7 @@ class _CartItemState extends State<CartItem> {
   Widget _buildPlusButton() {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          quantity++;
-        });
+        BlocProvider.of<CartCubit>(context).addQuantity(widget.cart.id);
       },
       child: Icon(
         Icons.add,

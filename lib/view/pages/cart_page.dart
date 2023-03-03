@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/cart/cart_cubit.dart';
+import 'package:spatu/models/cart.dart';
 
 import 'package:spatu/shared/theme.dart';
 import 'package:spatu/view/widgets/cart_item.dart';
@@ -89,16 +92,22 @@ class CartPage extends StatelessWidget {
   }
 
   Widget _buildCartList() {
-    return Container(
-      margin: EdgeInsets.only(top: 24.h),
-      child: Column(
-        children: const [
-          CartItem(),
-          CartItem(),
-          CartItem(),
-          CartItem(),
-        ],
-      ),
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, state) {
+        if (state.carts.isEmpty) {
+          return _buildCartEmpty(context: context);
+        }
+        return Container(
+          margin: EdgeInsets.only(top: 24.h),
+          child: Column(
+            children: state.carts
+                .map(
+                  (cart) => CartItem(cart: cart),
+                )
+                .toList(),
+          ),
+        );
+      },
     );
   }
 }

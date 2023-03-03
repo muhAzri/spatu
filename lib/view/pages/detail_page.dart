@@ -5,8 +5,10 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/cart/cart_cubit.dart';
 import 'package:spatu/models/product.dart';
 import 'package:spatu/shared/theme.dart';
 
@@ -492,31 +494,38 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildAddToCartButton() {
-    return Container(
-      height: 52.h,
-      padding: EdgeInsets.symmetric(
-        horizontal: 24.w,
-        vertical: 14.h,
-      ),
-      margin: EdgeInsets.only(left: 24.w),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.r), color: primaryColor),
-      child: Row(
-        children: [
-          Text(
-            'Add to Cart',
-            style: blackTextStyle.copyWith(fontWeight: bold),
-          ),
-          SizedBox(
-            width: 6.w,
-          ),
-          Image.asset(
-            'assets/icons/cart.png',
-            width: 24.w,
-            height: 24.h,
-            color: blackColor,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<CartCubit>(context).addProduct(widget.product);
+        showCustomSnackbar(
+            context, '${widget.product.name} telah ditambahkan kedalam cart');
+      },
+      child: Container(
+        height: 52.h,
+        padding: EdgeInsets.symmetric(
+          horizontal: 24.w,
+          vertical: 14.h,
+        ),
+        margin: EdgeInsets.only(left: 24.w),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.r), color: primaryColor),
+        child: Row(
+          children: [
+            Text(
+              'Add to Cart',
+              style: blackTextStyle.copyWith(fontWeight: bold),
+            ),
+            SizedBox(
+              width: 6.w,
+            ),
+            Image.asset(
+              'assets/icons/cart.png',
+              width: 24.w,
+              height: 24.h,
+              color: blackColor,
+            ),
+          ],
+        ),
       ),
     );
   }
