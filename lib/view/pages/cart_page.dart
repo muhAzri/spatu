@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spatu/bloc/cart/cart_cubit.dart';
-import 'package:spatu/models/cart.dart';
+import 'package:spatu/shared/method.dart';
 
 import 'package:spatu/shared/theme.dart';
 import 'package:spatu/view/widgets/cart_item.dart';
@@ -17,12 +17,12 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor1,
       appBar: _buildAppBar(),
+      bottomNavigationBar: _buildCustomBottomNav(context),
       body: ListView(
         padding: EdgeInsets.symmetric(
           horizontal: 24.w,
         ),
         children: [
-          // _buildCartEmpty(context: context),
           _buildCartList(),
           const RecomendationWidget(),
         ],
@@ -106,6 +106,108 @@ class CartPage extends StatelessWidget {
                 )
                 .toList(),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCustomBottomNav(BuildContext context) {
+    Widget buildPrice(CartState state) {
+      return Container(
+        width: 146.w,
+        margin: EdgeInsets.only(right: 24.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Total Price',
+              style: secondaryTextStyle,
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              state.carts.isEmpty
+                  ? 'Rp -'
+                  : formatCurrency(
+                      number: context.read<CartCubit>().totalPrice(),
+                    ),
+              style: primaryTextStyle.copyWith(
+                fontSize: 18.sp,
+                fontWeight: medium,
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget buildCheckoutButton(CartState state) {
+      return Expanded(
+        child: GestureDetector(
+          onTap: state.carts.isEmpty
+              ? () {}
+              : () {
+                  BlocProvider.of<CartCubit>(context).removeAllCart();
+                  showCustomSnackbar(context, 'Checkout Berhasil');
+                },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.w,
+              vertical: 14.h,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              color: state.carts.isEmpty ? grayColor : primaryColor,
+            ),
+            height: 52.h,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Checkout',
+                  style: blackTextStyle.copyWith(
+                    fontWeight: bold,
+                  ),
+                ),
+                SizedBox(
+                  width: 6.h,
+                ),
+                Icon(
+                  Icons.arrow_forward_outlined,
+                  color: blackColor,
+                  size: 24.sp,
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget buildContentRow(CartState state) {
+      return Row(
+        children: [
+          buildPrice(state),
+          buildCheckoutButton(state),
+        ],
+      );
+    }
+
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, state) {
+        return Container(
+          width: double.infinity,
+          height: 107.h,
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: grayColor.withOpacity(0.4),
+              ),
+            ),
+          ),
+          child: buildContentRow(state),
         );
       },
     );

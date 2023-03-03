@@ -472,24 +472,26 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildPricing() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Total Price',
-          style: secondaryTextStyle,
-        ),
-        SizedBox(
-          height: 4.h,
-        ),
-        Text(
-          formatCurrency(number: widget.product.price),
-          style: primaryTextStyle.copyWith(
-            fontSize: 18.sp,
-            fontWeight: medium,
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Total Price',
+            style: secondaryTextStyle,
           ),
-        )
-      ],
+          SizedBox(
+            height: 4.h,
+          ),
+          Text(
+            formatCurrency(number: widget.product.price),
+            style: primaryTextStyle.copyWith(
+              fontSize: 18.sp,
+              fontWeight: medium,
+            ),
+          )
+        ],
+      ),
     );
   }
 

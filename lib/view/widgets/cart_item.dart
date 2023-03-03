@@ -6,6 +6,7 @@ import 'package:spatu/bloc/cart/cart_cubit.dart';
 import 'package:spatu/models/cart.dart';
 import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
+import 'package:spatu/view/pages/detail_page.dart';
 
 class CartItem extends StatefulWidget {
   final CartModel cart;
@@ -43,11 +44,21 @@ class _CartItemState extends State<CartItem> {
   }
 
   Widget _buildProduct() {
-    return Row(
-      children: [
-        _buildProductPicture(),
-        _buildProductInfo(),
-      ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(product: widget.cart.product),
+          ),
+        );
+      },
+      child: Row(
+        children: [
+          _buildProductPicture(),
+          _buildProductInfo(),
+        ],
+      ),
     );
   }
 
