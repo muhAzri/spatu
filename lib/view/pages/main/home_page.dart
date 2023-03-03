@@ -33,7 +33,12 @@ class _HomePageState extends State<HomePage> {
         children: [
           GestureDetector(
             onTap: widget.onSearchTapped,
-            child: const SearchAppBar(),
+            child: Stack(
+              children: [
+                Container(),
+                const SearchAppBar(),
+              ],
+            ),
           ),
           _buildSpecialOfferSection(),
           _buildBrandCategoriesSection(),

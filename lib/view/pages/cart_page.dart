@@ -24,7 +24,13 @@ class CartPage extends StatelessWidget {
         ),
         children: [
           _buildCartList(),
-          const RecomendationWidget(),
+          BlocBuilder<CartCubit, CartState>(
+            builder: (context, state) {
+              return state.carts.isEmpty
+                  ? const RecomendationWidget()
+                  : const SizedBox();
+            },
+          ),
         ],
       ),
     );

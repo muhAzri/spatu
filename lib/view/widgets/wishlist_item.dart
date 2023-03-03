@@ -1,9 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/cart/cart_cubit.dart';
+import 'package:spatu/bloc/wishlist/wishlist_cubit.dart';
+import 'package:spatu/shared/method.dart';
 import 'package:spatu/shared/theme.dart';
 
+import '../../models/product.dart';
+
 class WishlistItem extends StatelessWidget {
-  const WishlistItem({super.key});
+  final ProductModel product;
+
+  const WishlistItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class WishlistItem extends StatelessWidget {
       child: Column(
         children: [
           _buildProduct(),
-          _buildButtons(),
+          _buildButtons(context),
         ],
       ),
     );
@@ -50,8 +59,8 @@ class WishlistItem extends StatelessWidget {
         horizontal: 6.8.w,
         vertical: 6.8.h,
       ),
-      child: Image.asset(
-        'assets/images/dummy_shoes.png',
+      child: CachedNetworkImage(
+        imageUrl: product.images[product.colors[0].toLowerCase()][0],
         width: 71.4.w,
         height: 71.4.h,
       ),
@@ -59,21 +68,24 @@ class WishlistItem extends StatelessWidget {
   }
 
   Widget _buildProductInfo() {
-    return Container(
-      margin: EdgeInsets.only(left: 12.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Metcon 7',
-            style: primaryTextStyle.copyWith(
-              fontSize: 16.sp,
-              fontWeight: bold,
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(left: 12.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              product.name,
+              style: primaryTextStyle.copyWith(
+                fontSize: 16.sp,
+                fontWeight: bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          _buildBrandSoldRow(),
-          _buildPrice(),
-        ],
+            _buildBrandSoldRow(),
+            _buildPrice(),
+          ],
+        ),
       ),
     );
   }
@@ -93,7 +105,7 @@ class WishlistItem extends StatelessWidget {
 
   Widget _buildBrandName() {
     return Text(
-      'Nike ·',
+      '${product.brand} ·',
       style: secondaryTextStyle.copyWith(
         fontWeight: bold,
       ),
@@ -112,7 +124,7 @@ class WishlistItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
-        '52.214 Sold',
+        '${product.soldCount} Sold',
         style: yellowTextStyle.copyWith(
           fontSize: 12.sp,
           fontWeight: medium,
@@ -125,7 +137,7 @@ class WishlistItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 4.h),
       child: Text(
-        'IDR 1.799.000',
+        formatCurrency(number: product.price),
         style: primaryTextStyle.copyWith(
           fontSize: 16.sp,
           fontWeight: bold,
@@ -134,22 +146,26 @@ class WishlistItem extends StatelessWidget {
     );
   }
 
-  Widget _buildButtons() {
+  Widget _buildButtons(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
         top: 16.h,
       ),
       child: Row(
         children: [
-          _buildDeleteButton(),
-          _buildAddToCartButton(),
+          _buildDeleteButton(context),
+          _buildAddToCartButton(context),
         ],
       ),
     );
   }
 
-  Widget _buildDeleteButton() {
+  Widget _buildDeleteButton(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        BlocProvider.of<WishlistCubit>(context).removeWishlist(product);
+        showCustomSnackbar(context, '${product.name} dihapus dari Wishlist');
+      },
       child: Container(
         width: 40.w,
         height: 40.h,
@@ -171,38 +187,44 @@ class WishlistItem extends StatelessWidget {
     );
   }
 
-  Widget _buildAddToCartButton() {
+  Widget _buildAddToCartButton(BuildContext context) {
     return Expanded(
-      child: Container(
-        height: 40.h,
-        margin: EdgeInsets.only(
-          left: 16.w,
-        ),
-        padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
-        decoration: BoxDecoration(
-          color: primaryColor,
-          borderRadius: BorderRadius.circular(6.r),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Add to Cart',
-              style: blackTextStyle.copyWith(
-                fontSize: 12.sp,
-                fontWeight: bold,
+      child: GestureDetector(
+        onTap: () {
+          BlocProvider.of<CartCubit>(context).addProduct(product);
+          showCustomSnackbar(context, '${product.name} ditambahkan ke Cart');
+        },
+        child: Container(
+          height: 40.h,
+          margin: EdgeInsets.only(
+            left: 16.w,
+          ),
+          padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(6.r),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Add to Cart',
+                style: blackTextStyle.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: bold,
+                ),
               ),
-            ),
-            SizedBox(
-              width: 2.w,
-            ),
-            Image.asset(
-              'assets/icons/cart.png',
-              width: 24.w,
-              height: 24.h,
-              color: blackColor,
-            )
-          ],
+              SizedBox(
+                width: 2.w,
+              ),
+              Image.asset(
+                'assets/icons/cart.png',
+                width: 24.w,
+                height: 24.h,
+                color: blackColor,
+              )
+            ],
+          ),
         ),
       ),
     );

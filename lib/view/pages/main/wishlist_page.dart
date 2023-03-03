@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spatu/bloc/wishlist/wishlist_cubit.dart';
+import 'package:spatu/view/pages/main/main_page.dart';
 
 import '../../../shared/theme.dart';
 import '../../widgets/search_appbar.dart';
@@ -17,16 +20,20 @@ class WishlistPage extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onSearchTapped,
-          child:  const SearchAppBar(),
+          child: Stack(
+            children: [
+              Container(),
+              const SearchAppBar(),
+            ],
+          ),
         ),
         _buildWishlistTitle(),
-        // _buildWishlistEmpty(),
         _buildWishlistList(),
       ],
     );
   }
 
-  Widget _buildWishlistEmpty() {
+  Widget _buildWishlistEmpty(BuildContext context) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(top: 24.h),
@@ -59,7 +66,17 @@ class WishlistPage extends StatelessWidget {
             height: 24.h,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const MainPage(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            },
             child: Text(
               'Explore Product',
               style: yellowTextStyle,
@@ -88,11 +105,17 @@ class WishlistPage extends StatelessWidget {
   Widget _buildWishlistList() {
     return Container(
       margin: EdgeInsets.only(top: 24.h),
-      child: Column(
-        children: const [
-          WishlistItem(),
-          WishlistItem(),
-        ],
+      child: BlocBuilder<WishlistCubit, WishlistState>(
+        builder: (context, state) {
+          if (state.wishlist.isEmpty) {
+            return _buildWishlistEmpty(context);
+          }
+          return Column(
+            children: state.wishlist
+                .map((wishlist) => WishlistItem(product: wishlist))
+                .toList(),
+          );
+        },
       ),
     );
   }

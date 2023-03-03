@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/product/product_bloc.dart';
 import 'bloc/user/user_bloc.dart';
+import 'bloc/wishlist/wishlist_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -45,6 +46,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<CartCubit>(
           create: (context) => CartCubit(),
         ),
+        BlocProvider<WishlistCubit>(
+          create: (context) => WishlistCubit(),
+        )
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

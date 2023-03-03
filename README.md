@@ -14,12 +14,12 @@ The UI design in Spatu is based on the Flutter Clean Code principle, making the 
 
 ## Todo List
 - [x] **Slicing**
-- [ ] **Firebase Integration**
+- [x] **Firebase Integration**
     - [x] **Authentication**
     - [x] **Product Catalog**
     - [x] **Product Details**
     - [x] **Search Catalog**
-    - [x] **Cart**
+    - [ ] **Cart**
     - [ ] **Wishlist**
     - [ ] **Checkout**
 - [ ] **Deploying into Google Play Store**

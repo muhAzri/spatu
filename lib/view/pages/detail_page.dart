@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spatu/bloc/cart/cart_cubit.dart';
+import 'package:spatu/bloc/wishlist/wishlist_cubit.dart';
 import 'package:spatu/models/product.dart';
 import 'package:spatu/shared/theme.dart';
 
@@ -271,22 +272,35 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildWishlistButton() {
-    return Container(
-      width: 36.w,
-      height: 36.h,
-      padding: EdgeInsets.symmetric(
-        horizontal: 6.w,
-        vertical: 6.h,
-      ),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: backgroundColor4,
-      ),
-      child: Center(
-        child: Image.asset(
-          'assets/icons/heart.png',
-          width: 24.w,
-          height: 24.h,
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<WishlistCubit>(context).setWishlist(widget.product);
+        showCustomSnackbar(
+            context, '${widget.product.name} ditambahkan ke Wishlist');
+      },
+      child: Container(
+        width: 36.w,
+        height: 36.h,
+        padding: EdgeInsets.symmetric(
+          horizontal: 6.w,
+          vertical: 6.h,
+        ),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: backgroundColor4,
+        ),
+        child: Center(
+          child: BlocBuilder<WishlistCubit, WishlistState>(
+            builder: (context, state) {
+              return Image.asset(
+                'assets/icons/heart.png',
+                width: 24.w,
+                height: 24.h,
+                color:
+                    state.wishlist.contains(widget.product) ? null : grayColor,
+              );
+            },
+          ),
         ),
       ),
     );
