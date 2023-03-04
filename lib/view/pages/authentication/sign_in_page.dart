@@ -27,6 +27,14 @@ class _SignInPageState extends State<SignInPage> {
   bool isObsecure = true;
 
   @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 1), () {
+      showDisclaimerDialog(context);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

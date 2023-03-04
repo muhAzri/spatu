@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:spatu/shared/theme.dart';
+import 'package:spatu/view/widgets/buttons.dart';
 
 showMyDialog(BuildContext context) {
   return showDialog<void>(
@@ -20,6 +21,53 @@ showMyDialog(BuildContext context) {
               fontWeight: bold,
             ),
             textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+showDisclaimerDialog(BuildContext context) {
+  return showDialog<void>(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width - (2 * 24),
+        child: AlertDialog(
+          backgroundColor: backgroundColor1,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Disclaimer:',
+                style: primaryTextStyle.copyWith(
+                  fontSize: 24.sp,
+                  fontWeight: bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 24.h,
+              ),
+              Text(
+                'Aplikasi ini hanya untuk tujuan pembelajaran dan pengembangan keterampilan. Beberapa fiturnya dibatasi dan tidak untuk tujuan komersial atau merugikan. Pengguna bertanggung jawab atas tindakan yang dilakukan dan pengembang tidak bertanggung jawab atas kerusakan atau kerugian akibat penggunaannya. Harap baca ketentuan penggunaan sebelum menggunakan aplikasi ini.',
+                style: secondaryTextStyle.copyWith(
+                  fontWeight: medium,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 24.h,
+              ),
+              CustomTextButton(
+                title: 'OK',
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
         ),
       );
