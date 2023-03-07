@@ -2,6 +2,9 @@
 
 Spatu is a mobile application built using Flutter, with a primary focus on shoe products. This ecommerce app aims to provide users with an easy and convenient way to shop for their favorite shoe brands and styles.
 
+## The App is Published
+Please Kindly to Try and Download My App On [Play Store](https://play.google.com/store/apps/details?id=com.muhazri.spatu)
+
 ## Features
 - **Authentication:** Users can create an account and log in to the app, allowing them to access personalized features such as cart and wishlist.
 - **Search Catalog:** The app provides a comprehensive shoe catalog, which users can search and filter based on brand, style, size, and price range.
@@ -22,7 +25,7 @@ The UI design in Spatu is based on the Flutter Clean Code principle, making the 
     - [x] **Cart**
     - [x] **Wishlist**
     - [x] **Checkout**
-- [ ] **Deploying into Google Play Store**
+- [x] **Deploying into Google Play Store**
 
 ## Screenshoots
 <img src="/screenshoot/1.png" width=250 > <img src="/screenshoot/2.png" width=250>  <img src="/screenshoot/3.png" width=250 > 
