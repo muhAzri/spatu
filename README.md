@@ -10,7 +10,6 @@ Please Kindly to Try and Download My App On [Play Store](https://play.google.com
 - **Search Catalog:** The app provides a comprehensive shoe catalog, which users can search and filter based on brand, style, size, and price range.
 - **Cart System:** Users can add shoes to their cart and proceed to checkout when they are ready to make a purchase.
 - **Wishlist System:** Users can add shoes to their wishlist and save them for later.
-- **Checkout:** The app supports manual transfer for non-payment gateway transactions, providing a secure and reliable way to complete purchases.
 
 ## UI Design
 The UI design in Spatu is based on the Flutter Clean Code principle, making the code more maintainable and easier to read. The slicing process was done with careful attention to detail to ensure that the app's design is consistent and user-friendly.
